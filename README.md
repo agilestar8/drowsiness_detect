@@ -4,4 +4,4 @@
 
 Yawn판별 - CNN
 
-EAR계산 - Dlib
+눈 랜드마크 계산 및 EAR - Dlib
