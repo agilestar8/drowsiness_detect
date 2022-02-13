@@ -1,6 +1,6 @@
 # drowsiness_detect
 
-얼굴탐지 - CasCa
+얼굴탐지 - haarcascade
 
 Yawn판별 - CNN
 
