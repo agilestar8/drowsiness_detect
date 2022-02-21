@@ -1,7 +1,14 @@
 # drowsiness_detect
 
-얼굴탐지 - haarcascade
+Used Skill
 
-Yawn판별 - CNN
+face dectection : haarcascade Classifier
 
-눈 랜드마크 계산 및 EAR - Dlib
+Yawning detection : Supervised Learned customized model (CNN)
+
+eye closing detection : Dlib, Face landmark estimation -> Histogram of Oriented Gradients(HOG) -> EAR(Eye Aspect Ratio)
+
+  
+ 
+ 
+ 
