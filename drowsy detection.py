@@ -14,7 +14,7 @@ drowsy_time = 0
 
 def beepsound():
     fr = 2000
-    du = 1000     # 1000 ms ==1second
+    du = 2000     # 1000 ms ==1second
     sd.Beep(fr, du) # winsound.Beep(frequency, duration)
 
 def eye_aspect_ratio(eye):
@@ -54,10 +54,9 @@ while True:
             if condition2 == 0:
                 cv2.putText(frame, "yawned", (x, y), cv2.FONT_HERSHEY_DUPLEX, 1, (0, 0, 255))
                 yawn_cnt += 1
-                # 시간 당 하품횟수
                 if yawn_cnt > 20:
-                    cv2.putText(frame, "you are drowsy", (10, 50), cv2.FONT_HERSHEY_DUPLEX, 0.7, (0, 0, 255),2)
-                    cv2.rectangle(frame, (0, 0), (680, 480), (0, 0, 255), 10)
+                    cv2.putText(frame, "you yawn long time", (10, 50), cv2.FONT_HERSHEY_DUPLEX, 0.7, (0, 0, 255),2)
+                    cv2.rectangle(frame, (0, 0), (640, 480), (0, 0, 255), 10)
                     drowsy_time += 1
 
             elif condition2 == 1:
