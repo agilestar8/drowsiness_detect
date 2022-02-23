@@ -1,15 +1,21 @@
 import cv2
 import numpy as np
 import dlib
+import winsound as sd
 from keras.models import load_model
-from scipy.spatial import distance as dist  # 유클리드 거리 계산용
+from scipy.spatial import distance as dist
 from imutils import face_utils
 
 EYE_AR_THRESH = 0.3
-EYE_AR_CONSEC_FRAMES = 16
+EYE_AR_CONSEC_FRAMES = 20
 COUNTER = 0
 yawn_cnt = 0
 drowsy_time = 0
+
+def beepsound():
+    fr = 2000
+    du = 1000     # 1000 ms ==1second
+    sd.Beep(fr, du) # winsound.Beep(frequency, duration)
 
 def eye_aspect_ratio(eye):
     A = dist.euclidean(eye[1], eye[5])
@@ -29,7 +35,7 @@ cap.set(3, 640)  # 너비 설정
 cap.set(4, 480)  # 높이 설정
 
 while True:
-    ret, frame = cap.read()     # 비디오를 프레임 단위로 읽음, 정상작동 시 ret == True, frame == 읽은 비디오프레임
+    ret, frame = cap.read()     # 비디오를 프레임 단위로 읽기
     frame = cv2.flip(frame, 1)  # 화면 좌우대칭
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)          # 프레임을 흑백(gray)로 변환
     faces = face_cascade.detectMultiScale(gray, 1.05, 5)    # 얼굴검출, 검출 성공 시 x,y,w,h 좌표 리턴
@@ -48,9 +54,10 @@ while True:
             if condition2 == 0:
                 cv2.putText(frame, "yawned", (x, y), cv2.FONT_HERSHEY_DUPLEX, 1, (0, 0, 255))
                 yawn_cnt += 1
-                # 프레임 당 하품시간
+                # 시간 당 하품횟수
                 if yawn_cnt > 20:
                     cv2.putText(frame, "you are drowsy", (10, 50), cv2.FONT_HERSHEY_DUPLEX, 0.7, (0, 0, 255),2)
+                    cv2.rectangle(frame, (0, 0), (680, 480), (0, 0, 255), 10)
                     drowsy_time += 1
 
             elif condition2 == 1:
@@ -79,16 +86,18 @@ while True:
             # EAR이 0.3을 넘기면
             if ear < EYE_AR_THRESH:
                 COUNTER += 1
+                drowsy_time += 1
                 if COUNTER >= EYE_AR_CONSEC_FRAMES:  # 20 프레임이상 EAR이 기준치 미달 시
                     cv2.putText(frame, "DROWSINESS ALERT!", (450, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
-                    drowsy_time += 1
+                    beepsound()
+
             else:
                 COUNTER = 0
                 drowsy_time = 0
 
             cv2.putText(frame, "EAR: {:.3f}".format(ear), (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
             if drowsy_time > 40:
-                cv2.putText(frame, "Please take a break ", (240, 320), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+                cv2.putText(frame, "Please take a break ", (240, 320), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
 
     cv2.imshow('CAM1', frame)
     k = cv2.waitKey(30) & 0xff
